@@ -31,10 +31,11 @@ import fiona
 matplotlib.style.use('seaborn')
 
 #changing wd
-os.chdir('C:/Users/oawowale/OneDrive - USDA/Geospatial Ecology Team/Test_data/data_python')
+#os.chdir('C:/Users/oawowale/OneDrive - USDA/Geospatial Ecology Team/Test_data/data_python')
+os.chdir('E:/eni_folder/Water_Yields_Proj/')
 
 #List of layers in the gdb
-eni_geo_db = fiona.listlayers('EniProjData/EniProjData.gdb')
+eni_geo_db = fiona.listlayers('EniProjData.gdb')
 
 '''Fucntions'''
 
@@ -70,7 +71,16 @@ def clean_data(geodataframe, index_num):
     geodataframe_clean = field_to_index(geodataframe_join, 0)
     return geodataframe_clean
 
+
+
+
 '''Functions for creating tables and graphical data'''
+
+def df_to_csv(dataframe, desired_filename):
+    str_filename = str(desired_filename) + '.csv'
+    dataframe.to_csv(str_filename, index=False)
+
+
 #this create table function creates a table and exports it as a pdf
 def create_table(dataframe):
     name_fig = input('Type the name you want to save the file as with the file extension at the end:')
@@ -149,12 +159,13 @@ def calculate_zone_stats(vector, layer_num, raster, band_num): #enter vector and
         #zone_statistics is a geojson (format for stroing geo features) basically just a dictionary
         #geostats is a geojson stored in a geopandas data frame
         geostats = gpd.GeoDataFrame.from_features(zone_statistics)
-        return geostats
+
     else:
         zone_statistics = zonal_stats(vector_file, raster,
                                       stats=['min', 'mean', 'max', 'median', 'sum', 'std', 'range', 'count'], geojson_out=True)
         geostats = gpd.GeoDataFrame.from_features(zone_statistics)
-        return geostats
+    raster_file.close()
+    return geostats
 
 
 
